@@ -1,7 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'Auth/auth.dart';
-import 'home_page.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -14,7 +12,7 @@ class _SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xff2E505B),
+      backgroundColor: const Color(0xff2E505B),
       body: SafeArea(
         child: Container(
           width: double.infinity,
@@ -22,18 +20,13 @@ class _SignInPageState extends State<SignInPage> {
           child: Center(
             child: GestureDetector(
               onTap: () async {
-                User? user = await signInWithGoogle();
-                if (user == null) {
-                } else {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => HomePage()));
-                }
+                await signInWithGoogle();
               },
               child: Container(
                 alignment: Alignment.center,
                 width: MediaQuery.of(context).size.width - 60,
                 height: 50,
-                margin: EdgeInsets.symmetric(horizontal: 30),
+                margin: const EdgeInsets.symmetric(horizontal: 30),
                 decoration: BoxDecoration(
                   color: Colors.pink[400],
                   borderRadius: BorderRadius.circular(30),

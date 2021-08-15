@@ -2,6 +2,9 @@ import 'dart:ui';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:movie_app_yellow/watched_movie.dart';
 import 'package:movie_app_yellow/widgets.dart';
 
 import 'Auth/auth.dart';
@@ -14,20 +17,24 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Widget movie(String name, String director, String asset, Size size) {
-    return Container(
-      width: double.infinity,
-      height: size.height / 5,
-      padding: const EdgeInsets.symmetric(
-        horizontal: 30,
-        vertical: 5,
-      ),
-      color: Colors.transparent,
-      child: CustomCard(
-        name: name,
-        director: director,
-      ),
-    );
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initBox();
+  }
+
+  bool isInitialised = false;
+  initBox() async {
+    await Hive.openBox('${FirebaseAuth.instance.currentUser!.uid}_watched')
+        .then((value) async => {
+              await Hive.openBox(FirebaseAuth.instance.currentUser!.uid)
+                  .then((value) => {
+                        setState(() {
+                          isInitialised = true;
+                        })
+                      })
+            });
   }
 
   @override
@@ -36,53 +43,81 @@ class _HomePageState extends State<HomePage> {
     return SafeArea(
       child: Stack(
         children: [
-          Image.asset(
-            'assets/background.jpg',
-            height: size.height,
-            width: double.infinity,
-            fit: BoxFit.cover,
-          ),
+          // Image.asset(
+          //   'assets/background.jpg',
+          //   height: size.height,
+          //   width: double.infinity,
+          //   fit: BoxFit.cover,
+          // ),
           BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
             child: Scaffold(
-              resizeToAvoidBottomInset: false,
-              backgroundColor: Colors.transparent,
+              resizeToAvoidBottomInset: true,
+              backgroundColor: Colors.grey[400], //Colors.transparent,
               appBar: AppBar(
-                backgroundColor: Colors.transparent,
+                backgroundColor: Color(0xff00FF94), //Colors.transparent,
+                leading: IconButton(
+                    onPressed: () async {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (_) => Watched()));
+                    },
+                    icon: const Icon(
+                      Icons.preview_sharp,
+                      // color: Colors.black87,
+                    )),
                 actions: [
                   if (FirebaseAuth.instance.currentUser != null)
                     IconButton(
                         onPressed: () async {
                           await signOut();
                         },
-                        icon: const Icon(Icons.logout))
+                        icon: const Icon(
+                          Icons.logout,
+                          // color: Colors.black87,
+                        ))
                 ],
               ),
-              floatingActionButton: Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.black,
-                ),
-                child: IconButton(
-                    iconSize: 50,
-                    color: Colors.pink,
-                    onPressed: () async {},
-                    icon: const Icon(Icons.add_comment)),
-              ),
               body: Container(
+                color: Colors.transparent,
                 width: double.infinity,
                 height: size.height - MediaQuery.of(context).padding.top,
-                child: ListView.builder(
-                  physics: BouncingScrollPhysics(),
-                  itemCount: 10,
-                  itemBuilder: (context, index) {
-                    return movie('name', 'director', 'asset',
-                        MediaQuery.of(context).size);
-                  },
-                ),
+                child: isInitialised == true
+                    ? ValueListenableBuilder(
+                        valueListenable:
+                            Hive.box(FirebaseAuth.instance.currentUser!.uid)
+                                .listenable(),
+                        builder: (context, box, _) {
+                          Box tbox = box as Box;
+                          final list = tbox.keys.toList();
+
+                          return ListView.builder(
+                            physics: const BouncingScrollPhysics(),
+                            itemCount: list.length,
+                            itemBuilder: (context, index) {
+                              return movie(box, list[index],
+                                  MediaQuery.of(context).size, false);
+                            },
+                          );
+                        })
+                    : Container(
+                        color: Colors.transparent,
+                      ),
               ),
             ),
           ),
+          Positioned(
+              bottom: 10,
+              left: size.width / 2 - 20,
+              child: GestureDetector(
+                onTap: () {
+                  openForm(context, setState);
+                },
+                child: const Icon(
+                  Icons.add_circle,
+                  size: 50,
+                  color: Color(0xff00FF94),
+                ),
+              )),
         ],
       ),
     );

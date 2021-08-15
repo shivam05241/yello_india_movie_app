@@ -19,7 +19,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     initBox();
   }
@@ -43,81 +42,99 @@ class _HomePageState extends State<HomePage> {
     return SafeArea(
       child: Stack(
         children: [
-          // Image.asset(
-          //   'assets/background.jpg',
-          //   height: size.height,
-          //   width: double.infinity,
-          //   fit: BoxFit.cover,
-          // ),
-          BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
-            child: Scaffold(
-              resizeToAvoidBottomInset: true,
-              backgroundColor: Colors.grey[400], //Colors.transparent,
-              appBar: AppBar(
-                backgroundColor: Color(0xff00FF94), //Colors.transparent,
-                leading: IconButton(
-                    onPressed: () async {
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (_) => Watched()));
-                    },
-                    icon: const Icon(
-                      Icons.preview_sharp,
-                      // color: Colors.black87,
-                    )),
-                actions: [
-                  if (FirebaseAuth.instance.currentUser != null)
-                    IconButton(
-                        onPressed: () async {
-                          await signOut();
-                        },
-                        icon: const Icon(
-                          Icons.logout,
-                          // color: Colors.black87,
-                        ))
-                ],
-              ),
-              body: Container(
-                color: Colors.transparent,
-                width: double.infinity,
-                height: size.height - MediaQuery.of(context).padding.top,
-                child: isInitialised == true
-                    ? ValueListenableBuilder(
-                        valueListenable:
-                            Hive.box(FirebaseAuth.instance.currentUser!.uid)
-                                .listenable(),
-                        builder: (context, box, _) {
-                          Box tbox = box as Box;
-                          final list = tbox.keys.toList();
+          Scaffold(
+            resizeToAvoidBottomInset: true,
+            backgroundColor: Colors.grey[400], //Colors.transparent,
+            appBar: AppBar(
+              backgroundColor: const Color(0xff00FF94), //Colors.transparent,
+              leading: IconButton(
+                  onPressed: () async {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => const Watched()));
+                  },
+                  icon: const Icon(
+                    Icons.preview_sharp,
+                    color: Colors.black,
+                    // color: Colors.black87,
+                  )),
+              actions: [
+                if (FirebaseAuth.instance.currentUser != null)
+                  IconButton(
+                      onPressed: () async {
+                        await signOut();
+                      },
+                      icon: const Icon(
+                        Icons.logout,
+                        color: Colors.black,
+                        // color: Colors.black87,
+                      ))
+              ],
+            ),
+            body: Container(
+              color: Colors.transparent,
+              width: double.infinity,
+              height: size.height - MediaQuery.of(context).padding.top,
+              child: isInitialised == true
+                  ? ValueListenableBuilder(
+                      valueListenable:
+                          Hive.box(FirebaseAuth.instance.currentUser!.uid)
+                              .listenable(),
+                      builder: (context, box, _) {
+                        Box tbox = box as Box;
+                        final list = tbox.keys.toList();
 
-                          return ListView.builder(
-                            physics: const BouncingScrollPhysics(),
-                            itemCount: list.length,
-                            itemBuilder: (context, index) {
-                              return movie(box, list[index],
-                                  MediaQuery.of(context).size, false);
-                            },
-                          );
-                        })
-                    : Container(
-                        color: Colors.transparent,
+                        return ListView.builder(
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: list.length,
+                          itemBuilder: (context, index) {
+                            return movie(box, list[index],
+                                MediaQuery.of(context).size, false);
+                          },
+                        );
+                      })
+                  : Container(
+                      color: Colors.transparent,
+                      child: const Center(
+                        child: CircularProgressIndicator(),
                       ),
-              ),
+                    ),
             ),
           ),
           Positioned(
-              bottom: 10,
-              left: size.width / 2 - 20,
-              child: GestureDetector(
-                onTap: () {
-                  openForm(context, setState);
-                },
-                child: const Icon(
-                  Icons.add_circle,
-                  size: 50,
+            bottom: 0,
+            left: 0,
+            child: Container(
+              height: 35,
+              width: size.width,
+              decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30))),
+            ),
+          ),
+          Positioned(
+            bottom: 5,
+            left: size.width / 2 - 25,
+            child: GestureDetector(
+              onTap: () {
+                openForm(context, setState);
+              },
+              child: Container(
+                width: 50,
+                height: 50,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
                   color: Color(0xff00FF94),
                 ),
-              )),
+                child: const Icon(
+                  Icons.add,
+                  size: 50,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

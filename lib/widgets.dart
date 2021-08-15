@@ -7,6 +7,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:movie_app_yellow/sign_in_page.dart';
 import 'package:movie_app_yellow/watched_movie.dart';
 
+import 'movie_page.dart';
+
 class CustomCard extends StatefulWidget {
   final dynamic boxKey;
   final Box box;
@@ -30,6 +32,7 @@ class _CustomCardState extends State<CustomCard> {
           return AlertDialog(
             content: Text(
               'Login to $msg this movie',
+              overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
             ),
             actionsAlignment: MainAxisAlignment.spaceEvenly,
@@ -92,6 +95,8 @@ class _CustomCardState extends State<CustomCard> {
     bool isDelete = await deleteDialog();
     if (isDelete) {
       widget.box.delete(widget.boxKey);
+      Hive.box('${FirebaseAuth.instance.currentUser!.uid}_watched')
+          .delete(widget.boxKey);
     }
   }
 
@@ -110,11 +115,19 @@ class _CustomCardState extends State<CustomCard> {
             child: GestureDetector(
               onTap: () {
                 Map map = widget.box.get(widget.boxKey);
-                map['time'] = DateTime.now().toString();
-
-                Hive.box('${uid}_watched').put(widget.boxKey, map);
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (_) => Watched()));
+                if (widget.isWatched == false) {
+                  map['time'] = DateTime.now().toString();
+                  Hive.box('${uid}_watched').put(widget.boxKey, map);
+                }
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => MoviePage(
+                      movieName: map['name'],
+                      movieDirector: map['director'],
+                      moviePath: map['poster'],
+                    ),
+                  ),
+                );
               },
               child: Container(
                 padding: const EdgeInsets.all(10),
@@ -174,19 +187,26 @@ class _CustomCardState extends State<CustomCard> {
                     ],
                   ),
                   Container(
-                    height: widget.Height / 3,
+                    alignment: Alignment.center,
+                    height: widget.Height / 2,
                     child: Text(
                       '${widget.box.get(widget.boxKey)['name']}',
-                      style: TextStyle(fontSize: 25),
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 25,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                   Container(
-                    height: widget.Height / 3,
-                    child: Text('${widget.box.get(widget.boxKey)['director']}'),
+                    alignment: Alignment.topCenter,
+                    height: widget.Height / 4,
+                    child: Text(
+                      '${widget.box.get(widget.boxKey)['director']}',
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                  const SizedBox(
-                    height: 10,
-                  )
                 ],
               ),
             ),
@@ -335,14 +355,17 @@ void openForm(BuildContext context, StateSetter setState,
                                 'poster': file!.path,
                               }).then((value) => Navigator.of(context).pop());
                             } else {
-                              Hive.box(uid).put(boxKey, {
-                                'name': name.text,
-                                'director': director.text,
-                                'poster': file!.path,
-                              }).then((value) => Navigator.of(context).pop());
+                              Map map = Hive.box(uid).get(boxKey);
+                              map['name'] = name.text;
+                              map['director'] = director.text;
+                              map['poster'] = file!.path;
+
+                              Hive.box(uid).put(boxKey, map);
+                              Hive.box('${uid}_watched').put(boxKey, map);
+                              Navigator.of(context).pop();
                             }
                           }
-                        } else {}
+                        }
                       },
                       child: Container(
                         decoration: BoxDecoration(

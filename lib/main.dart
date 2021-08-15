@@ -9,6 +9,7 @@ void main() async {
   final appDir = await getApplicationDocumentsDirectory();
   await Firebase.initializeApp();
   Hive.init(appDir.path);
+
   runApp(const MyApp());
 }
 
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'yellow class',
       home: LandingPage(),
     );

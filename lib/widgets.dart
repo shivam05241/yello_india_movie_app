@@ -361,7 +361,10 @@ void openForm(BuildContext context, StateSetter setState,
                               map['poster'] = file!.path;
 
                               Hive.box(uid).put(boxKey, map);
-                              Hive.box('${uid}_watched').put(boxKey, map);
+                              if (Hive.box('${uid}_watched').get(boxKey) !=
+                                  null) {
+                                Hive.box('${uid}_watched').put(boxKey, map);
+                              }
                               Navigator.of(context).pop();
                             }
                           }

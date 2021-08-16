@@ -20,11 +20,17 @@ class _MoviePageState extends State<MoviePage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
-            widget.movieName,
-            overflow: TextOverflow.ellipsis,
+          iconTheme: const IconThemeData(
+            color: Colors.black,
           ),
-          backgroundColor: Color(0xff00FF94),
+          title: Center(
+            child: Text(
+              widget.movieName,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(color: Colors.black),
+            ),
+          ),
+          backgroundColor: const Color(0xff00FF94),
           foregroundColor: Colors.black,
         ),
         body: Stack(

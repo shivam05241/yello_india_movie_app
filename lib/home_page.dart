@@ -46,6 +46,12 @@ class _HomePageState extends State<HomePage> {
             resizeToAvoidBottomInset: true,
             backgroundColor: Colors.grey[400], //Colors.transparent,
             appBar: AppBar(
+              title: const Center(
+                child: Text(
+                  'Home',
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
               backgroundColor: const Color(0xff00FF94), //Colors.transparent,
               leading: IconButton(
                   onPressed: () async {

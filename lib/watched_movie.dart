@@ -22,7 +22,16 @@ class _WatchedState extends State<Watched> {
         resizeToAvoidBottomInset: true,
         backgroundColor: Colors.grey[400], //Colors.transparent,
         appBar: AppBar(
-          backgroundColor: Color(0xff00FF94), //Colors.transparent,
+          iconTheme: const IconThemeData(
+            color: Colors.black,
+          ),
+          title: const Center(
+            child: Text(
+              'Watched List',
+              style: TextStyle(color: Colors.black),
+            ),
+          ),
+          backgroundColor: const Color(0xff00FF94), //Colors.transparent,
           actions: [
             if (FirebaseAuth.instance.currentUser != null)
               IconButton(
@@ -31,7 +40,7 @@ class _WatchedState extends State<Watched> {
                   },
                   icon: const Icon(
                     Icons.logout,
-                    // color: Colors.black87,
+                    color: Colors.black87,
                   ))
           ],
         ),

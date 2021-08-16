@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:movie_app_yellow/sign_in_page.dart';
-import 'package:movie_app_yellow/watched_movie.dart';
 
 import 'movie_page.dart';
 
@@ -192,7 +191,7 @@ class _CustomCardState extends State<CustomCard> {
                     child: Text(
                       '${widget.box.get(widget.boxKey)['name']}',
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 25,
                       ),
                       textAlign: TextAlign.center,
@@ -285,7 +284,7 @@ void openForm(BuildContext context, StateSetter setState,
                                           MainAxisAlignment.center,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
-                                      children: [
+                                      children: const [
                                         Icon(
                                           Icons.photo_library_outlined,
                                           size: 40,
@@ -334,8 +333,8 @@ void openForm(BuildContext context, StateSetter setState,
                       alignment: Alignment.center,
                       height: 40,
                       width: double.infinity,
-                      margin: EdgeInsets.symmetric(horizontal: 40),
-                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      margin: const EdgeInsets.symmetric(horizontal: 40),
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: TextFormField(
                         controller: director,
                         decoration: const InputDecoration(
@@ -406,7 +405,7 @@ void openForm(BuildContext context, StateSetter setState,
 Widget movie(Box box, dynamic boxKey, Size size, bool isWatched) {
   return Column(
     children: [
-      SizedBox(
+      const SizedBox(
         height: 5,
       ),
       Container(

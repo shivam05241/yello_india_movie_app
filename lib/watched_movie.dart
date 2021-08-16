@@ -64,7 +64,6 @@ class _WatchedState extends State<Watched> {
                     physics: const BouncingScrollPhysics(),
                     itemCount: list.length,
                     itemBuilder: (context, index) {
-                      print(box.get(list[index]));
                       return movie(
                           box, list[index], MediaQuery.of(context).size, true);
                     },

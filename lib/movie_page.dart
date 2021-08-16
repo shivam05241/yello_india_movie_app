@@ -61,37 +61,33 @@ class _MoviePageState extends State<MoviePage> {
                         ),
                       ),
                     ),
-                    Container(
-                      child: Text(
-                        widget.movieName,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 40,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w900,
-                          shadows: [
-                            Shadow(
-                              blurRadius: 8.0,
-                              color: Colors.lightGreenAccent,
-                            ),
-                          ],
-                        ),
+                    Text(
+                      widget.movieName,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 40,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w900,
+                        shadows: [
+                          Shadow(
+                            blurRadius: 8.0,
+                            color: Colors.lightGreenAccent,
+                          ),
+                        ],
                       ),
                     ),
-                    Container(
-                      child: Text(
-                        widget.movieDirector,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          color: Colors.lightGreenAccent,
-                          shadows: [
-                            Shadow(
-                              blurRadius: 8.0,
-                              color: Colors.black,
-                            ),
-                          ],
-                        ),
+                    Text(
+                      widget.movieDirector,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        color: Colors.lightGreenAccent,
+                        shadows: [
+                          Shadow(
+                            blurRadius: 8.0,
+                            color: Colors.black,
+                          ),
+                        ],
                       ),
                     )
                   ],
